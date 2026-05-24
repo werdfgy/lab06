@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: deps_install
+        run: sudo apt update && sudo apt install -y dpkg-dev rpm
+      - name: project_configure
+        run: cmake -B build -D CMAKE_BUILD_TYPE=Release
+      - name: solver_build
+        run: cmake --build build --config Release
+      - name: solver_pack
+        run: |
+          cd build
+          cpack -G DEB
+          cpack -G RPM
+          cpack -G ZIP
+      - name: files_upload
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            build/*.deb
+            build/*.rpm
+            build/*.zip
+  win32:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: project_configure
+        run: cmake -B build -D CMAKE_BUILD_TYPE=Release
+      - name: solver_build
+        run: cmake --build build --config Release
+      - name: solver_pack
+        run: |
+          cd build
+          cpack -G WIX
+      - name: files_upload
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            build/*.msi
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: project_configure
+        run: cmake -B build -D CMAKE_BUILD_TYPE=Release
+      - name: solver_build
+        run: cmake --build build --config Release
+      - name: solver_pack
+        run: |
+          cd build
+          cpack -G DragNDrop
+      - name: files_upload
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            build/*.dmg
+
