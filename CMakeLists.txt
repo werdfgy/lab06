@@ -22,3 +22,13 @@ add_subdirectory(hello_world)
 add_subdirectory(solver_lib)
 
 add_subdirectory(solver)
+
+install(TARGETS formatter formatter_ex solver_lib
+	ARCHIVE DESTINATION lib
+	LIBRARY DESTINATION lib
+	RUNTIME DESTINATION bin)
+install(TARGETS solver
+	RUNTIME DESTINATION bin)
+install(DIRECTORY formatter_lib/ formatter_ex_lib/ solver_lib/
+	DESTINATION include
+	FILES_MATCHING PATTERN "*.h")
