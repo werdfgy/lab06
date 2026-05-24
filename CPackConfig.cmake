@@ -1,0 +1,4 @@
+set(CPACK_DEBIAN_PACKAGE_NAME "project1")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "vovavovazhd2007@gmail.com")
+include(CPack)
+set(CPACK_PACKAGE_VERSION $PRINT_VERSION)
